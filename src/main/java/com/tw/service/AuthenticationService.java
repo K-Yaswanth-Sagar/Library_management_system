@@ -7,13 +7,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import com.tw.dto.LoginRequestDTO;
 import com.tw.dto.LoginResponseDTO;
 import com.tw.dto.RegisterRequestDTO;
 import com.tw.entity.User;
+import com.tw.jwt.JwtService;
 import com.tw.repository.UserRepo;
 
+
+@Service
 public class AuthenticationService {
 	
 	@Autowired
@@ -26,7 +30,8 @@ public class AuthenticationService {
 	private AuthenticationManager authenticationManager;
 	
 	@Autowired
-
+	private JwtService jwtService;
+	
 	public User registerNormalUser(RegisterRequestDTO registerRequestDTO) {
 
 		if(userRepo.findByUsername(registerRequestDTO.getUsername()).isPresent()) {
@@ -55,7 +60,7 @@ public class AuthenticationService {
 		User user = userRepo.findByUsername(loginRequestDTO.getUsername())
 				.orElseThrow(() -> new RuntimeException("User not found"));
 		
-		String token = "";
+		String token = jwtService.generateToken(user);
 		
 		return LoginResponseDTO.builder()
 				.token(token)
