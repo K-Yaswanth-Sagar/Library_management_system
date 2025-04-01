@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.tw.dto.IssueRecordDTO;
 import com.tw.entity.Book;
 import com.tw.entity.IssueRecord;
 import com.tw.entity.User;
@@ -26,7 +27,7 @@ public class IssueRecordService {
 	private UserRepo userRepo;
 	
 	
-	public IssueRecord issueTheBook(Long id) {
+	public IssueRecordDTO issueTheBook(Long id) {
 
 		Book book = bookRepo.findById(id)
 				.orElseThrow(() -> new RuntimeException("Book not found"));
@@ -52,11 +53,21 @@ public class IssueRecordService {
 		}
 		
 		bookRepo.save(book);
-		return issueRecordRepo.save(issueRecord);
+		issueRecordRepo.save(issueRecord);
+		
+		IssueRecordDTO issueRecordDTO = new IssueRecordDTO();
+		issueRecordDTO.setBookTitle(issueRecord.getBook().getTitle());
+		issueRecordDTO.setUserIdNumber(issueRecord.getUser().getId());
+		issueRecordDTO.setUserName(issueRecord.getUser().getUsername());
+		issueRecordDTO.setDueDate(issueRecord.getDueDate());
+		issueRecordDTO.setId(issueRecord.getId());
+		issueRecordDTO.setIssueDate(issueRecord.getIssueDate());
+		
+		return issueRecordDTO;
 		
 	}
 
-	public IssueRecord returnTheBook(Long issueId) {
+	public IssueRecordDTO returnTheBook(Long issueId) {
 
 		IssueRecord issueRecord = issueRecordRepo.findById(issueId)
 				.orElseThrow(() -> new RuntimeException("Record is not found"));
@@ -72,8 +83,19 @@ public class IssueRecordService {
 		
 		issueRecord.setReturnDate(LocalDate.now());
 		issueRecord.setReturened(true);
+		issueRecordRepo.save(issueRecord);
+		 
+		IssueRecordDTO issueRecordDTO = new IssueRecordDTO(); 
+		issueRecordDTO.setReturnDate(issueRecord.getReturnDate());
+		issueRecordDTO.setReturened(issueRecord.isReturened());
+		issueRecordDTO.setBookTitle(issueRecord.getBook().getTitle());
+		issueRecordDTO.setUserIdNumber(issueRecord.getUser().getId());
+		issueRecordDTO.setUserName(issueRecord.getUser().getUsername());
+		issueRecordDTO.setDueDate(issueRecord.getDueDate());
+		issueRecordDTO.setId(issueRecord.getId());
+		issueRecordDTO.setIssueDate(issueRecord.getIssueDate());
 		
-		return issueRecordRepo.save(issueRecord);
+		return issueRecordDTO;
 	}
 
 }

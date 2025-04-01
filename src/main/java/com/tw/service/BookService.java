@@ -33,7 +33,7 @@ public class BookService {
 		book.setQuantity(bookDTO.getQuantity());
 		book.setTitle(bookDTO.getTitle());
 		
-		return book;
+		return bookRepo.save(book);
 	}
 
 	public void deleteBook(Long id) {
@@ -52,7 +52,7 @@ public class BookService {
 		oldBook.setQuantity(bookDTO.getQuantity());
 		oldBook.setTitle(bookDTO.getTitle());
 		
-		return oldBook;
+		return bookRepo.save(oldBook);
 	}
 
 }

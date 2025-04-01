@@ -3,6 +3,7 @@ package com.tw.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,15 +21,15 @@ public class IssueRecordController {
 	@Autowired
 	private IssueRecordService issueRecordService;
 
-	@PostMapping("/issuebook/{id}")
+	@PostMapping("/issuebook-{id}")
 	public ResponseEntity<?> issueBook(@PathVariable Long id){
 		logger.info("Fetching book with ID: {}", id);
-		return ResponseEntity.ok(issueRecordService.issueTheBook(id));
+		return ResponseEntity.status(HttpStatus.OK).body(issueRecordService.issueTheBook(id));
 	}
 	
-	@PostMapping("/returnbook/{issueId}")
+	@PostMapping("/returnbook-{issueId}")
 	public ResponseEntity<?> returnBook(@PathVariable Long issueId){
 		logger.info("Returning book with issue ID: {}", issueId);
-		return ResponseEntity.ok(issueRecordService.returnTheBook(issueId));
+		return ResponseEntity.status(HttpStatus.OK).body(issueRecordService.returnTheBook(issueId));
 	}
 }
