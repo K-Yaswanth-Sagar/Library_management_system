@@ -13,8 +13,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import com.tw.entity.User;
+import com.tw.globalexceptionhandler.TokenExpiredException;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
@@ -52,13 +55,19 @@ public class JwtService {
 	}
 
 	private Claims extreactAllClaims(String jwtToken) {
-		
-		return Jwts
-				.parser()
-				.verifyWith(getSignInKey())
-				.build()
-				.parseSignedClaims(jwtToken)
-				.getPayload();
+		try {
+			return Jwts
+					.parser()
+					.verifyWith(getSignInKey())
+					.build()
+					.parseSignedClaims(jwtToken)
+					.getPayload();
+		}
+		catch (ExpiredJwtException e) {
+            throw new TokenExpiredException("Token is expired");
+        } catch (JwtException e) {  // Catch any other JWT exceptions
+            throw new JwtException("Invalid JWT token");
+        }
 		
 	}
 	

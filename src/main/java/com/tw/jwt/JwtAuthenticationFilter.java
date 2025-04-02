@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.tw.entity.User;
+import com.tw.globalexceptionhandler.JwtValidationException;
 import com.tw.repository.UserRepo;
 
 import jakarta.servlet.FilterChain;
@@ -46,6 +47,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		
 		jwtToken = authHeader.substring(7);
 		username = jwtService.extractUsername(jwtToken);
+		if (username == null) {
+	        throw new JwtValidationException("Invalid JWT token");
+		}
 		
 		if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 			User userDetails = userRepo.findByUsername(username)

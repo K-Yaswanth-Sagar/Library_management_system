@@ -10,6 +10,7 @@ import com.tw.dto.IssueRecordDTO;
 import com.tw.entity.Book;
 import com.tw.entity.IssueRecord;
 import com.tw.entity.User;
+import com.tw.globalexceptionhandler.ResourceNotFoundException;
 import com.tw.repository.BookRepo;
 import com.tw.repository.IssueRecordRepo;
 import com.tw.repository.UserRepo;
@@ -30,7 +31,7 @@ public class IssueRecordService {
 	public IssueRecordDTO issueTheBook(Long id) {
 
 		Book book = bookRepo.findById(id)
-				.orElseThrow(() -> new RuntimeException("Book not found"));
+	            .orElseThrow(() -> new ResourceNotFoundException("Book not found with ID: " + id));
 		
 		if(book.getQuantity() <= 0 || !book.isAvaliable()) {
 			throw new RuntimeException("Book is not avaliable");
@@ -38,7 +39,7 @@ public class IssueRecordService {
 		
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		User user = userRepo.findByUsername(username)
-				.orElseThrow(() -> new RuntimeException("User not found"));
+				.orElseThrow(() -> new ResourceNotFoundException("User not found"));
 		
 		IssueRecord issueRecord = new IssueRecord();
 		issueRecord.setIssueDate(LocalDate.now());

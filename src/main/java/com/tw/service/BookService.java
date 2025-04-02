@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.tw.dto.BookDTO;
 import com.tw.entity.Book;
+import com.tw.globalexceptionhandler.ResourceNotFoundException;
 import com.tw.repository.BookRepo;
 
 @Service
@@ -20,9 +21,8 @@ public class BookService {
 	}
 
 	public Book getBookById(Long id) {
-		Book book = bookRepo.findById(id).orElseThrow(() -> new RuntimeException("book not found"));
-		
-		return book;
+		return bookRepo.findById(id)
+	            .orElseThrow(() -> new ResourceNotFoundException("Book not found with ID: " + id));
 	}
 
 	public Book addBook(BookDTO bookDTO) {
@@ -38,13 +38,16 @@ public class BookService {
 
 	public void deleteBook(Long id) {
 
+		bookRepo.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Book not found with ID: " + id));
+		
 		bookRepo.deleteById(id);
 		
 	}
 
 	public Book updateBook(Long id, BookDTO bookDTO) {
 		Book oldBook = bookRepo.findById(id)
-				.orElseThrow(() -> new RuntimeException("book not found"));
+	            .orElseThrow(() -> new ResourceNotFoundException("Book not found with ID: " + id));
 		
 		oldBook.setAuther(bookDTO.getAuther());
 		oldBook.setAvaliable(bookDTO.isAvaliable());

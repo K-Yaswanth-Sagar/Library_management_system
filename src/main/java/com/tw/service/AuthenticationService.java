@@ -13,6 +13,7 @@ import com.tw.dto.LoginRequestDTO;
 import com.tw.dto.LoginResponseDTO;
 import com.tw.dto.RegisterRequestDTO;
 import com.tw.entity.User;
+import com.tw.globalexceptionhandler.ResourceNotFoundException;
 import com.tw.jwt.JwtService;
 import com.tw.repository.UserRepo;
 
@@ -58,7 +59,7 @@ public class AuthenticationService {
 						loginRequestDTO.getPassword())
 				);
 		User user = userRepo.findByUsername(loginRequestDTO.getUsername())
-				.orElseThrow(() -> new RuntimeException("User not found"));
+				.orElseThrow(() -> new ResourceNotFoundException("User not found"));
 		
 		String token = jwtService.generateToken(user);
 		

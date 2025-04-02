@@ -1,5 +1,7 @@
 package com.tw.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,18 +19,25 @@ import com.tw.service.AuthenticationService;
 @RequestMapping("/auth")
 public class AuthController {
 
-	@Autowired
-	private AuthenticationService authenticationService;
-	
-	@PostMapping("/registernormaluser")
-	public ResponseEntity<User> registerNormalUser(@RequestBody RegisterRequestDTO registerRequestDTO){
-		return ResponseEntity.ok(authenticationService.registerNormalUser(registerRequestDTO));
-	}
-	
-	@PostMapping("/login")
-	public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO loginRequestDTO){
-		return ResponseEntity.ok(authenticationService.login(loginRequestDTO));
+	 private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
-	}
+	    @Autowired
+	    private AuthenticationService authenticationService;
+	    
+	    @PostMapping("/registernormaluser")
+	    public ResponseEntity<User> registerNormalUser(@RequestBody RegisterRequestDTO registerRequestDTO) {
+	        logger.info("Registering normal user: {}", registerRequestDTO.getUsername());
+	        User user = authenticationService.registerNormalUser(registerRequestDTO);
+	        logger.info("User registered successfully: {}", user.getUsername());
+	        return ResponseEntity.ok(user);
+	    }
+	    
+	    @PostMapping("/login")
+	    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO loginRequestDTO) {
+	        logger.info("User attempting to login: {}", loginRequestDTO.getUsername());
+	        LoginResponseDTO response = authenticationService.login(loginRequestDTO);
+	        logger.info("User logged in successfully: {}", response.getUsername());
+	        return ResponseEntity.ok(response);
+	    }
 	
 }
