@@ -18,6 +18,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import com.tw.jwt.JwtAuthenticationEntryPoint;
 import com.tw.jwt.JwtAuthenticationFilter;
 import com.tw.service.CustomeUserDetailsService;
 
@@ -28,6 +29,10 @@ public class SecurityConfig {
 
 	@Autowired
 	private JwtAuthenticationFilter authenticationFilter;
+	
+	@Autowired
+	private JwtAuthenticationEntryPoint authenticationEntryPoint;  
+
 	
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
@@ -43,7 +48,9 @@ public class SecurityConfig {
 			.sessionManagement(session -> session 
 					.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.authenticationProvider(authenticationProvider())
-			.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
+			.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
+			.exceptionHandling(exception -> exception
+		            .authenticationEntryPoint(authenticationEntryPoint));
 		
 		return http.build();
 		

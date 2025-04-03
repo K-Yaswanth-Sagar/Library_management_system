@@ -81,11 +81,11 @@ public class JwtService {
 		return (userDetails.getUsername().equals(username) && !isTokenExpired(jwtToken));
 	}
 
-	private boolean isTokenExpired(String jwtToken) {
+	public boolean isTokenExpired(String jwtToken) {
 		return extractExpiration(jwtToken).before(new Date());
 	}
 
-	private Date extractExpiration(String jwtToken) {
+	public Date extractExpiration(String jwtToken) {
 		return extractClaims(jwtToken, Claims :: getExpiration);
 	}
 
