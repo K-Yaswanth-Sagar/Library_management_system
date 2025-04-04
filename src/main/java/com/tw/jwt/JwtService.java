@@ -65,7 +65,7 @@ public class JwtService {
 		}
 		catch (ExpiredJwtException e) {
             throw new TokenExpiredException("Token is expired");
-        } catch (JwtException e) {  // Catch any other JWT exceptions
+        } catch (JwtException e) {  
             throw new JwtException("Invalid JWT token");
         }
 		

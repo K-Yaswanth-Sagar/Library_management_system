@@ -24,7 +24,7 @@ public class AdminController {
 	@Autowired
 	private AuthenticationService authenticationService;
 	
-	private static final Logger logger = LoggerFactory.getLogger(BookController.class);
+	private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 	
 	@PostMapping("/registeradminuser")
 	public ResponseEntity<User> registerAdminnUser(@RequestBody RegisterRequestDTO registerRequestDTO){

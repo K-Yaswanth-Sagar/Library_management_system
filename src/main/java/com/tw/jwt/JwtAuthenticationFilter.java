@@ -20,17 +20,15 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 
 @Component
-@RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	@Autowired
-	private final JwtService jwtService;
+	private JwtService jwtService;
 	
 	@Autowired
-	private final UserRepo userRepo;
+	private UserRepo userRepo;
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -39,6 +37,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		final String authHeader = request.getHeader("Authorization");
 		final String jwtToken;
 		final String username;
+		
+		String requestURI = request.getRequestURI(); 
+
+		
+		 if (requestURI.startsWith("/swagger-ui") || requestURI.startsWith("/v3/api-docs")) {
+		        filterChain.doFilter(request, response);
+		        return;
+		    }
 		
 		if(authHeader == null || !authHeader.startsWith("Bearer ")) {
 			filterChain.doFilter(request, response);
