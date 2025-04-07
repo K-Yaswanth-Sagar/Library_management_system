@@ -1,8 +1,7 @@
 package com.tw.entity;
 
 import java.util.Collection;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -29,14 +28,11 @@ public class User implements UserDetails{
 	private String email;
 	private String password;
 	
-	@ElementCollection(fetch = FetchType.EAGER)
-	private Set<String> roles;
+	private String role;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return roles.stream()
-				.map(SimpleGrantedAuthority::new)
-				.collect(Collectors.toList());
+		return List.of(new SimpleGrantedAuthority(role));
 	}
 
 	@Override

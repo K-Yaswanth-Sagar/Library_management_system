@@ -15,7 +15,6 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
@@ -82,7 +81,6 @@ class BookControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "ADMIN")
     void testAddBook() throws Exception {
     	 Mockito.when(bookService.addBook(any(BookDTO.class))).thenReturn(sampleBook);
 
@@ -94,7 +92,6 @@ class BookControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "ADMIN")
     void testUpdateBook() throws Exception {
         Mockito.when(bookService.updateBook(anyLong(), any(BookDTO.class))).thenReturn(sampleBook);
 
@@ -106,7 +103,6 @@ class BookControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "ADMIN")
     void testDeleteBook() throws Exception {
         Mockito.doNothing().when(bookService).deleteBook(1L);
 

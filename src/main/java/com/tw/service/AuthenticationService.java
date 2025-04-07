@@ -1,7 +1,5 @@
 package com.tw.service;
 
-import java.util.HashSet;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -39,14 +37,13 @@ public class AuthenticationService {
 			throw new RuntimeException("User already registred");
 		}
 		
-		Set<String> roles = new HashSet<>();
-		roles.add("ROLE_USER");
+		String roles = "ROLE_USER";
 		
 		User user = new User();
 		user.setEmail(registerRequestDTO.getEmail());
 		user.setUsername(registerRequestDTO.getUsername());
 		user.setPassword(passwordEncoder.encode(registerRequestDTO.getPassword()));
-		user.setRoles(roles);
+		user.setRole(roles);
 		
 		return userRepo.save(user );
 	}
@@ -62,11 +59,12 @@ public class AuthenticationService {
 				.orElseThrow(() -> new ResourceNotFoundException("User not found"));
 		
 		String token = jwtService.generateToken(user);
+		System.out.println("Here the user role is " + user.getRole());
 		
 		return LoginResponseDTO.builder()
 				.token(token)
 				.username(user.getUsername())
-				.roles(user.getRoles())
+				.roles(user.getRole())
 				.build();
 	}
 
@@ -75,15 +73,13 @@ public class AuthenticationService {
 			throw new RuntimeException("User already registred");
 		}
 		
-		Set<String> roles = new HashSet<>();
-		roles.add("ROLE_USER");
-		roles.add("ROLE_ADMIN");
+		String roles = "ROLE_ADMIN";
 		
 		User user = new User();
 		user.setEmail(registerRequestDTO.getEmail());
 		user.setUsername(registerRequestDTO.getUsername());
 		user.setPassword(passwordEncoder.encode(registerRequestDTO.getPassword()));
-		user.setRoles(roles);
+		user.setRole(roles);
 		
 		
 		return userRepo.save(user);

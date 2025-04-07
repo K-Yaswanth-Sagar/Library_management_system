@@ -2,7 +2,6 @@ package com.tw.jwt;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -63,10 +62,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			
 			if(jwtService.isTokenValid(jwtToken, userDetails)) {
 				
-				List<SimpleGrantedAuthority> authorities = userDetails.getRoles()
-																		.stream()
-																		.map(SimpleGrantedAuthority :: new)
-																		.collect(Collectors.toList());
+				List<SimpleGrantedAuthority> authorities = List.of(
+					    new SimpleGrantedAuthority(userDetails.getRole())
+					);
+				System.out.println("Role from DB: " + userDetails.getRole());
+
 				
 				UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
 																userDetails,
